@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía Interactiva de Requisitos para la Ganadería</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Calm Harmony (Beige/Stone neutrals with a muted Green accent) -->
+    <!-- Application Structure Plan: Se ha diseñado una aplicación de una sola página con navegación superior para saltar entre secciones. La estructura es: 1) Encabezado introductorio. 2) Sección central interactiva con pestañas para cada uno de los 5 pilares, permitiendo al usuario enfocarse en un tema a la vez. 3) Un gráfico de radar para visualizar el concepto clave de "equilibrio" entre los pilares. 4) Una sección de comparación para el pilar de "Genética". 5) Conclusiones y recomendaciones claras. 6) Un cuestionario interactivo para autoevaluación. Esta estructura transforma un documento lineal en una experiencia de aprendizaje exploratoria y no lineal, mucho más atractiva y efectiva para la retención de información. -->
+    <!-- Visualization & Content Choices: 1. Pilares: (Meta: Organizar/Informar) Se usan pestañas interactivas (HTML/CSS/JS) para presentar la información de forma segmentada y clara. 2. Equilibrio: (Meta: Relacionar/Comparar) Un gráfico de radar (Chart.js) representa visualmente la interdependencia y la necesidad de equilibrio entre los 5 pilares, un concepto central del informe. 3. Genética: (Meta: Comparar) Tarjetas lado a lado (HTML/Tailwind) para comparar razas, haciendo la información más digerible. 4. Preguntas: (Meta: Involucrar) Un cuestionario interactivo (HTML/JS) transforma las preguntas estáticas en una herramienta de aprendizaje activo. Todas las visualizaciones y elementos usan tecnologías permitidas (HTML/Canvas) y evitan SVG/Mermaid. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fdfcf9;
+            color: #44403c;
+        }
+        .nav-link {
+            transition: color 0.3s, border-color 0.3s;
+        }
+        .nav-link:hover {
+            color: #166534;
+            border-color: #166534;
+        }
+        .tab-btn {
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .tab-btn.active {
+            background-color: #16a34a;
+            color: white;
+        }
+        .chart-container {
+            position: relative;
+            height: 60vh;
+            max-height: 450px;
+            width: 100%;
+            max-width: 500px;
+            margin: auto;
+        }
+        .quiz-option {
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        .quiz-option.selected {
+            background-color: #dcfce7;
+            border-color: #16a34a;
+        }
+        .quiz-option.correct {
+            background-color: #dcfce7;
+            border-color: #16a34a;
+        }
+        .quiz-option.incorrect {
+            background-color: #fee2e2;
+            border-color: #dc2626;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <nav class="container mx-auto px-6 py-3">
+            <div class="flex justify-between items-center">
+                <div class="text-xl font-bold text-stone-700">Ganadería Exitosa</div>
+                <div class="hidden md:flex space-x-6">
+                    <a href="#pilares" class="nav-link text-stone-600 pb-1 border-b-2 border-transparent">Los 5 Pilares</a>
+                    <a href="#equilibrio" class="nav-link text-stone-600 pb-1 border-b-2 border-transparent">El Equilibrio</a>
+                    <a href="#conclusiones" class="nav-link text-stone-600 pb-1 border-b-2 border-transparent">Conclusiones</a>
+                    <a href="#quiz" class="nav-link text-stone-600 pb-1 border-b-2 border-transparent">Quiz</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-6 py-8 md:py-12">
+
+        <section class="text-center mb-12 md:mb-16">
+            <h1 class="text-4xl md:text-5xl font-bold text-green-800 mb-4">Guía Interactiva de Requisitos para la Ganadería</h1>
+            <p class="text-lg md:text-xl max-w-3xl mx-auto text-stone-600">
+                Una guía para comprender los fundamentos de una explotación ganadera exitosa, rentable y sostenible. Navega por las secciones para descubrir los pilares clave.
+            </p>
+        </section>
+
+        <section id="pilares" class="mb-12 md:mb-16 scroll-mt-20">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold text-stone-800">Los 5 Pilares Fundamentales</h2>
+                <p class="text-md text-stone-500 mt-2">Haz clic en cada pilar para explorar los detalles. Cada uno es vital para el éxito general.</p>
+            </div>
+            
+            <div class="max-w-4xl mx-auto">
+                <div class="flex flex-wrap justify-center gap-2 md:gap-4 mb-6">
+                    <button class="tab-btn active text-sm md:text-base font-semibold py-2 px-4 rounded-full bg-stone-200 text-stone-700" data-tab="alimentacion">💧 Alimentación y Agua</button>
+                    <button class="tab-btn text-sm md:text-base font-semibold py-2 px-4 rounded-full bg-stone-200 text-stone-700" data-tab="sanidad">✚ Sanidad</button>
+                    <button class="tab-btn text-sm md:text-base font-semibold py-2 px-4 rounded-full bg-stone-200 text-stone-700" data-tab="manejo">🤲 Manejo</button>
+                    <button class="tab-btn text-sm md:text-base font-semibold py-2 px-4 rounded-full bg-stone-200 text-stone-700" data-tab="instalaciones">🏡 Instalaciones</button>
+                    <button class="tab-btn text-sm md:text-base font-semibold py-2 px-4 rounded-full bg-stone-200 text-stone-700" data-tab="genetica">🧬 Genética</button>
+                </div>
+
+                <div id="tab-content" class="bg-white p-6 md:p-8 rounded-2xl shadow-lg border border-stone-200 min-h-[300px]">
+                </div>
+            </div>
+        </section>
+
+        <section id="equilibrio" class="mb-12 md:mb-16 scroll-mt-20">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold text-stone-800">El Equilibrio es la Clave</h2>
+                <p class="text-md text-stone-500 mt-2">El éxito no proviene de un solo factor, sino de la armonía entre todos. El gráfico de radar muestra cómo un puntaje ideal en cada área crea una operación robusta y balanceada.</p>
+            </div>
+            <div class="chart-container">
+                <canvas id="pillarsChart"></canvas>
+            </div>
+        </section>
+
+        <section id="conclusiones" class="mb-12 md:mb-16 scroll-mt-20 bg-green-50/50 rounded-2xl p-8">
+            <h2 class="text-3xl font-bold text-center text-stone-800 mb-8">Conclusiones y Recomendaciones</h2>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="font-bold text-xl text-green-700 mb-2">Conclusiones Clave</h3>
+                    <ul class="space-y-4">
+                        <li class="flex items-start">
+                            <span class="text-green-600 mr-3 mt-1">✔</span>
+                            <span><strong class="font-semibold text-stone-700">Integración Total:</strong> El éxito depende del equilibrio entre alimentación, sanidad, manejo, genética e infraestructura. Descuidar uno afecta a todos.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-600 mr-3 mt-1">✔</span>
+                            <span><strong class="font-semibold text-stone-700">Bienestar es Rentabilidad:</strong> Un buen trato y condiciones cómodas no solo son éticos, sino que aumentan la productividad y las ganancias.</span>
+                        </li>
+                    </ul>
+                </div>
+                 <div>
+                    <h3 class="font-bold text-xl text-green-700 mb-2">Recomendaciones Prácticas</h3>
+                    <ul class="space-y-4">
+                        <li class="flex items-start">
+                            <span class="text-green-600 mr-3 mt-1">▶</span>
+                            <span><strong class="font-semibold text-stone-700">Asesoría Profesional:</strong> Antes de empezar, elabora un plan y busca la guía de veterinarios, zootecnistas o agrónomos.</span>
+                        </li>
+                        <li class="flex items-start">
+                             <span class="text-green-600 mr-3 mt-1">▶</span>
+                            <span><strong class="font-semibold text-stone-700">Capacitación Continua:</strong> La ganadería evoluciona. Mantente actualizado en nuevas técnicas para ser más eficiente y sostenible.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="quiz" class="scroll-mt-20">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold text-stone-800">Pon a Prueba tu Conocimiento</h2>
+                <p class="text-md text-stone-500 mt-2">Responde estas preguntas para ver cuánto has aprendido sobre los requisitos básicos de la ganadería.</p>
+            </div>
+            <div id="quiz-container" class="max-w-3xl mx-auto space-y-6">
+            </div>
+            <div class="text-center mt-8">
+                <button id="check-quiz-btn" class="bg-green-600 text-white font-bold py-3 px-8 rounded-full hover:bg-green-700 transition-colors">Revisar Respuestas</button>
+                <p id="quiz-result" class="mt-4 font-semibold text-lg"></p>
+            </div>
+        </section>
+
+    </main>
+    
+    <footer class="text-center py-6 mt-12 border-t border-stone-200">
+        <p class="text-stone-500">Una guía interactiva basada en el módulo de Animales Mayores.</p>
+    </footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    const contentData = {
+        alimentacion: {
+            title: 'Alimentación y Agua: El Combustible',
+            points: [
+                '<strong>Pastos de Calidad:</strong> La base de todo. Requiere manejo de praderas y rotación de potreros para asegurar pastos nutritivos.',
+                '<strong>Suplementación Estratégica:</strong> Necesaria en épocas de escasez o para animales de alta producción. Incluye balanceados, sales mineralizadas y ensilaje.',
+                '<strong>Agua Fresca y Constante:</strong> Acceso ilimitado a agua limpia es vital. La deshidratación desploma la producción.'
+            ]
+        },
+        sanidad: {
+            title: 'Sanidad Animal: Prevenir es Invertir',
+            points: [
+                '<strong>Plan de Vacunación:</strong> Diseñado por un veterinario para prevenir enfermedades clave como fiebre aftosa, rabia y carbunco.',
+                '<strong>Control de Parásitos:</strong> Calendarios de desparasitación interna (lombrices) y externa (garrapatas, moscas) para evitar pérdidas de peso.',
+                '<strong>Higiene Rigurosa:</strong> Limpieza de corrales, comederos y bebederos para evitar la propagación de infecciones.'
+            ]
+        },
+        manejo: {
+            title: 'Manejo Adecuado: Menos Estrés, Más Producción',
+            points: [
+                '<strong>Buenas Prácticas de Trato:</strong> Evitar gritos y golpes. Un animal tranquilo es más productivo y seguro de manejar.',
+                '<strong>Identificación y Registros:</strong> Cada animal con arete o marca. Llevar registros productivos y sanitarios es clave para tomar decisiones informadas.',
+                '<strong>Agrupación por Lotes:</strong> Separar animales por categoría (terneros, vacas preñadas) para un manejo y alimentación específicos.'
+            ]
+        },
+        instalaciones: {
+            title: 'Instalaciones y Espacio: Confort y Seguridad',
+            points: [
+                '<strong>Corrales y Cercas Seguras:</strong> Deben estar en buen estado para prevenir fugas y accidentes. Una manga de manejo es esencial.',
+                '<strong>Refugio y Sombra:</strong> Acceso a sombra (árboles o techos) para proteger del estrés calórico. Refugio contra viento y lodo en climas adversos.',
+                '<strong>Comederos y Bebederos Funcionales:</strong> Diseñados para evitar desperdicio y garantizar acceso fácil para todos los animales.'
+            ]
+        },
+        genetica: {
+            title: 'Genética: La Elección Correcta para Tu Finca',
+            points: [
+                '<strong>Adaptabilidad al Entorno:</strong> Escoger razas que prosperen en el clima de la zona. Es el factor más importante.',
+                '<strong>Propósito Productivo:</strong> Definir el objetivo: ¿carne, leche o doble propósito? La raza debe alinearse con esta meta.'
+            ],
+            comparison: {
+                title: 'Comparativa de Razas (Ejemplo)',
+                breeds: [
+                    { name: 'Holstein (Europea)', climate: 'Ideal para climas fríos', purpose: 'Alta producción de leche', resistance: 'Sensible al calor y parásitos tropicales.' },
+                    { name: 'Brahman (Cebuina)', climate: 'Ideal para climas tropicales y cálidos', purpose: 'Buena producción de carne', resistance: 'Muy resistente al calor, humedad y parásitos.' }
+                ]
+            }
+        }
+    };
+
+    const quizData = [
+        {
+            question: "¿Cuál es el requisito considerado más crucial para la producción ganadera?",
+            options: ["Genética de punta", "Instalaciones de lujo", "Alimentación y agua", "Manejo computarizado"],
+            answer: "Alimentación y agua"
+        },
+        {
+            question: "La fiebre aftosa y la rabia son enfermedades que se previenen principalmente con:",
+            options: ["Buena alimentación", "Un plan de vacunación", "Control de parásitos", "Limpieza de corrales"],
+            answer: "Un plan de vacunación"
+        },
+        {
+            question: "¿Por qué es importante llevar registros de los animales?",
+            options: ["Para ponerles nombres bonitos", "Para cumplir un requisito sin importancia", "Para tomar mejores decisiones de manejo y producción", "Para venderlos más caros"],
+            answer: "Para tomar mejores decisiones de manejo y producción"
+        },
+        {
+            question: "En un clima cálido y tropical, ¿qué raza bovina sería generalmente más recomendable?",
+            options: ["Holstein, porque da mucha leche", "Angus, por la calidad de su carne", "Brahman, por su resistencia al calor y parásitos", "Simmental, por su doble propósito"],
+            answer: "Brahman, por su resistencia al calor y parásitos"
+        }
+    ];
+
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    const tabContentContainer = document.getElementById('tab-content');
+
+    function updateTabContent(tabKey) {
+        const content = contentData[tabKey];
+        if (!content) return;
+
+        let pointsHtml = content.points.map(point => `<li class="flex items-start"><span class="text-green-600 font-bold mr-3 mt-1">✓</span><span>${point}</span></li>`).join('');
+        
+        let comparisonHtml = '';
+        if (content.comparison) {
+            comparisonHtml += `<h4 class="font-bold text-lg mt-6 mb-4 text-stone-700">${content.comparison.title}</h4>`;
+            comparisonHtml += '<div class="grid md:grid-cols-2 gap-4">';
+            content.comparison.breeds.forEach(breed => {
+                comparisonHtml += `
+                    <div class="bg-stone-50 rounded-lg p-4 border border-stone-200">
+                        <h5 class="font-bold text-green-700">${breed.name}</h5>
+                        <ul class="text-sm mt-2 space-y-1 text-stone-600">
+                            <li><strong>Clima:</strong> ${breed.climate}</li>
+                            <li><strong>Propósito:</strong> ${breed.purpose}</li>
+                            <li><strong>Característica Clave:</strong> ${breed.resistance}</li>
+                        </ul>
+                    </div>
+                `;
+            });
+            comparisonHtml += '</div>';
+        }
+
+        tabContentContainer.innerHTML = `
+            <h3 class="text-2xl font-bold text-stone-800 mb-4">${content.title}</h3>
+            <ul class="space-y-3 text-stone-600">${pointsHtml}</ul>
+            ${comparisonHtml}
+        `;
+    }
+
+    tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+            updateTabContent(button.dataset.tab);
+        });
+    });
+
+    updateTabContent('alimentacion');
+
+    const ctx = document.getElementById('pillarsChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'radar',
+        data: {
+            labels: ['Alimentación', 'Sanidad', 'Manejo', 'Instalaciones', 'Genética'],
+            datasets: [{
+                label: 'Nivel Ideal para el Éxito',
+                data: [10, 10, 10, 10, 10],
+                backgroundColor: 'rgba(22, 163, 74, 0.2)',
+                borderColor: 'rgb(22, 163, 74)',
+                pointBackgroundColor: 'rgb(22, 163, 74)',
+                pointBorderColor: '#fff',
+                pointHoverBackgroundColor: '#fff',
+                pointHoverBorderColor: 'rgb(22, 163, 74)'
+            }]
+        },
+        options: {
+            maintainAspectRatio: false,
+            scales: {
+                r: {
+                    angleLines: { color: 'rgba(68, 64, 60, 0.2)' },
+                    grid: { color: 'rgba(68, 64, 60, 0.2)' },
+                    pointLabels: {
+                        font: { size: 14, weight: 'bold' },
+                        color: '#44403c'
+                    },
+                    ticks: {
+                        backdropColor: 'transparent',
+                        color: '#78716c',
+                        stepSize: 2,
+                        display: false
+                    },
+                    suggestedMin: 0,
+                    suggestedMax: 10
+                }
+            },
+            plugins: {
+                legend: {
+                    labels: {
+                        color: '#44403c',
+                        font: { size: 14 }
+                    }
+                }
+            }
+        }
+    });
+
+    const quizContainer = document.getElementById('quiz-container');
+    quizData.forEach((q, index) => {
+        const optionsHtml = q.options.map(option => `
+            <label class="quiz-option block p-4 border-2 border-stone-200 rounded-lg cursor-pointer hover:bg-stone-100">
+                <input type="radio" name="question${index}" value="${option}" class="hidden">
+                <span>${option}</span>
+            </label>
+        `).join('');
+
+        quizContainer.innerHTML += `
+            <div class="bg-white p-6 rounded-lg shadow-sm border border-stone-200">
+                <p class="font-semibold mb-4">${index + 1}. ${q.question}</p>
+                <div class="space-y-3" data-question-index="${index}">${optionsHtml}</div>
+            </div>
+        `;
+    });
+    
+    quizContainer.addEventListener('change', (e) => {
+        if (e.target.type === 'radio') {
+            const parent = e.target.closest('.space-y-3');
+            parent.querySelectorAll('.quiz-option').forEach(label => label.classList.remove('selected'));
+            e.target.parentElement.classList.add('selected');
+        }
+    });
+
+    document.getElementById('check-quiz-btn').addEventListener('click', () => {
+        let score = 0;
+        quizData.forEach((q, index) => {
+            const container = document.querySelector(`div[data-question-index="${index}"]`);
+            const selected = container.querySelector('input:checked');
+            
+            container.querySelectorAll('.quiz-option').forEach(label => {
+                label.classList.remove('correct', 'incorrect');
+                const inputValue = label.querySelector('input').value;
+                if (inputValue === q.answer) {
+                    label.classList.add('correct');
+                }
+            });
+
+            if (selected) {
+                if (selected.value === q.answer) {
+                    score++;
+                } else {
+                    selected.parentElement.classList.remove('correct');
+                    selected.parentElement.classList.add('incorrect');
+                }
+            }
+        });
+        const resultEl = document.getElementById('quiz-result');
+        resultEl.textContent = `Obtuviste ${score} de ${quizData.length} respuestas correctas.`;
+        resultEl.style.color = score === quizData.length ? '#16a34a' : '#dc2626';
+    });
+});
+</script>
+</body>
+</html>
